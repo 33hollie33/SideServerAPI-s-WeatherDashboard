@@ -1,0 +1,103 @@
+style.css
+body{
+    padding: 0;
+    margin: 0;
+}
+.banner {
+    width: 100%;
+    padding: 20px;
+    background-color: black;
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 600; 
+}
+.row{
+    display :flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.main-content {
+width: 95%;
+margin: 2%;
+}
+
+.forecast-wrap {
+    width: 65%;
+    min-height: 200px;
+    border: 2px; 
+    }
+
+    .search-wrap{
+    font-size: 30px;
+    font-weight: 600;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 20px; 
+    max-height: 170px;
+        }
+
+.column{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 10px; 
+
+}
+.search-btn {
+    background-color: aqua;
+    color: inherit;
+    color: black;
+    padding: 10px;
+    font: inherit;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.search-btn{
+                                                  
+}
+
+.search-wrap {
+
+}
+.city-forecast{
+width: 170px;
+min-height: 200px;
+margin: 0 auto;
+}
+
+.weekly-forecast {
+width: 860px;
+margin: 0 auto;
+height: 500px;
+        } 
+
+.day1 {
+background-color: #000;
+width: 300px;
+height: 200px;
+ }
+
+ .day2 {
+background-color: #999;
+width: 300px;
+height: 200px;
+
+}
+.day3 {
+background-color: #333;
+width: 300px;
+height: 200px;
+            }   
+            
+.day4 {
+background-color: #000;
+width: 300px;
+height: 200px;
+}
+
+.day5 {
+    background-color: #000;
+    width: 300px;
+    height: 200px;
+}
