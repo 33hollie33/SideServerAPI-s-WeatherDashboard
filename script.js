@@ -58,7 +58,7 @@ const clearError = () => {
 }
 
 const lookupLocation = (cityName) => {
-    const apiURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
+    const apiURL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
     return fetch(apiURL)
         .then(response => response.json())
         .then(data => {
@@ -95,7 +95,7 @@ const getWeatherData = (lat, lon) => {
             }
 
             let iconCode = currentDayData.weather[0].icon;
-            const iconURL = `http://openweathermap.org/img/w/${iconCode}.png`;
+            const iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
 
             document.getElementById("cityname-date").innerHTML = cityName + " (" + date + ")";
             let weatherIcon = document.createElement("img");
