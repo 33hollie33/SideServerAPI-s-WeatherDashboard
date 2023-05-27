@@ -1,155 +1,188 @@
-// const weather api keys
-// const
+const recentLocations = JSON.parse(localStorage.getItem('CitySearch')) ||[]
+const apiKey = '517027e1c58e057de7aff58616a09fa9';
+let cityData = {};
 
-// 517027e1c58e057de7aff58616a09fa9
 
-const recentLocations = [];
-const getLocation = () => {
+let cityName = '';
 
-const userLocation= locationInput.value;
+const clearLocalStorage = () => {
+    if (!localStorage.getItem('firstLoad')) {
+        // I'm clearing the localStorage here
+        localStorage.clear();
 
-if (userLocation ==='') {
-    SetLocationError('Please enter a Location');
-} else {
-    lookupLocation(userLocation)
+        // Setting a flag indicating it's the first load
+        localStorage.setItem('firstLoad', true);
+    }
 }
-}
 
-const clearError = () => {
-    const errorDisplay = document.getElementById('error');
-    errorDisplay.textContent = '';
+
+let locationInput = document.getElementById("searchbar");
+
+const getCity = () => {
+
+   
+
+    const userLocation = locationInput.value;
+
+    cityName = userLocation;
+
+    locationInput.value = "";
+
+    if (userLocation === '') {
+        SetLocationError('Please enter a Location');
+    } else {
+
+
+
+        displayRecentHistory();
+
+        lookupLocation(userLocation)
+            .then(data => {
+                cityData = data;
+                getWeatherData(cityData.lat, cityData.lon);
+            })
+
+    }
 }
 
 const SetLocationError = (text) => {
-const errorDisplay = document.getElementById('error');
-errorDisplay.textContent = text;
-
-setTimeout(clearError, 3000);
-}
-
-const lookupLocation = (search) => {
-const apiURL = `${WEATHER_API_BASE_URL}`
-fetch(apiURL)
-.then(response => response.json())
-.then(data => {})
-
-console.log(data);
-
-let lat = data [0].lat;
-let lon = data [0].lon;
-
-const myData ={
-name:data [0].name,
-country: data[0].country,
-lat: data [0]. lat,
-lon: data [0].lon
-}
-console.log(myData);
-}
-
-let  apiURL =
-console.log(apiUrl)
-fetch(apiUrl);
-then(response => response.json())
-then (data => {
-    console.log(data);
-
-    displayCurrentWeather(data);
-
-    displayWeatherForecast(data);
-
-    displayWeather(myData);
-})
-
-const displayCurrentWeather =(weatherData) => {
-
-    const dailyData = WeatherData.daily
-
-    document.GetElementByID('forecast').style.display ="block";
-
-    const forecastlist = document.getElementByID('forcast-days');
-
-
-    for (let i = 0; i < MAX_DAILY_FORECAST;i++)  {
-        const dailyForecast =dailyData[i];
-        const day = new Date (dailyForecast.dt * 1000).toLocaleDateString('en-GB', { weekday: 'long'});
-        const temp = `${dailyForecast.temp.day}'`;
-        const humdity = `${dailyForecast.humidity}%`;
-        const wind = `${dailyForecast.wind_speed}MPH`;
-
-    }
-}
-
-const recentLocations = JSON.parse(localStorage.getItem('recentLocations')) || [];
-
-const getLocation = () => {
-    const userLocation = locationInput.value;
-
-    if (userLocation === '') {
-        setLocationError('Please enter a location');
-    } else {
-        lookupLocation(userLocation);
-    }
-};
-
-const clearError = () => {
-    const errorDisplay = document.getElementById('error');
-    errorDisplay.textContent = '';
-};
-
-const setLocationError = (text) => {
     const errorDisplay = document.getElementById('error');
     errorDisplay.textContent = text;
 
     setTimeout(clearError, 3000);
-};
+}
 
-const lookupLocation = (search) => {
-    const apiURL = `${WEATHER_API_BASE_URL}${search}`;
-    fetch(apiURL)
+const clearError = () => {
+    const errorDisplay = document.getElementById('error');
+    errorDisplay.textContent = '';
+}
+
+const lookupLocation = (cityName) => {
+    const apiURL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
+    return fetch(apiURL)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
 
-            let lat = data[0].lat;
-            let lon = data[0].lon;
-
-            const myData = {
+            cityData = {
                 name: data[0].name,
                 country: data[0].country,
-                lat: lat,
-                lon: lon
-            };
-            console.log(myData);
+                lat: data[0].lat,
+                lon: data[0].lon
+            }
+            recentLocations.unshift(cityData.name);
+            localStorage.setItem('CitySearch',JSON.stringify(recentLocations))
+            displayRecentHistory();
+            return cityData;
 
-        
-            recentLocations.push(myData);
-
-           
-            localStorage.setItem('recentLocations', JSON.stringify(recentLocations));
-
-            displayWeather(myData);
         })
-        .catch(error => {
-            console.error('Error:', error);
-            setLocationError('Failed to fetch location data');
-        });
-};
+}
 
-    const displayCurrentWeather = (weatherData) => {
-    const dailyData = weatherData.daily;
+const getWeatherData = (lat, lon) => {
+    const apiURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    return fetch(apiURL)
+        .then(response => response.json())
+        .then(data => {
 
-    document.getElementById('forecast').style.display = 'block';
+            console.log(data);
+            let currentDayData = data.list[0];
+            let date = convertDate(currentDayData.dt_txt);
 
-    const forecastList = document.getElementById('forecast-days');
+            let cityForecast = document.getElementById("city-forecast");
 
-    for (let i = 0; i < MAX_DAILY_FORECAST; i++) {
-        const dailyForecast = dailyData[i];
-        const day = new Date(dailyForecast.dt * 1000).toLocaleDateString('en-GB', { weekday: 'long' });
-        const temp = `${dailyForecast.temp.day}`;
-        const humidity = `${dailyForecast.humidity}%`;
-        const wind = `${dailyForecast.wind_speed} MPH`;
+            if (cityForecast.classList.contains("hidden")) {
+                cityForecast.classList.remove("hidden");
+                cityForecast.style.display = "block";
+            }
 
-        
+            let iconCode = currentDayData.weather[0].icon;
+            const iconURL = `http://openweathermap.org/img/w/${iconCode}.png`;
+
+            document.getElementById("cityname-date").innerHTML = cityName + " (" + date + ")";
+            let weatherIcon = document.createElement("img");
+            weatherIcon.src = iconURL;
+            document.getElementById("cityname-date").appendChild(weatherIcon);
+
+            document.getElementById("temp_value").innerHTML = currentDayData.main.temp + "F";
+            document.getElementById("wind_value").innerHTML = currentDayData.wind.speed + "MPH";
+            document.getElementById("humid_value").innerHTML = currentDayData.main.humidity + "%";
+
+            document.getElementById("five-day-forecast").innerHTML = "";
+
+            let headingDiv = document.getElementById("weekly-heading");
+            headingDiv.style.display = "block";
+
+            for (let i = 7; i < data.list.length; i+=8) {
+                let dayData = data.list[i];
+
+                let dayWrap = document.createElement("div");
+                dayWrap.classList.add("day-wrap");
+
+                let date = document.createElement("h3");
+                date.style.color = "white";
+                date.innerHTML = convertDate(dayData.dt_txt);
+
+                let tempValue = document.createElement("div");
+                tempValue.innerHTML = "Temp: " + dayData.main.temp + "F";
+
+                let windValue = document.createElement("div");
+                windValue.innerHTML = "Wind: " + dayData.wind.speed + " MPH";
+
+                let humidValue = document.createElement("div");
+                humidValue.innerHTML = "Humidity: " + dayData.main.humidity + " %";
+
+                let iconData = dayData.weather[0].icon;
+                const imageURL = `http://openweathermap.org/img/w/${iconData}.png`;
+                let weatherImg = document.createElement("img");
+                weatherImg.src = imageURL;
+
+                dayWrap.appendChild(date);
+                dayWrap.appendChild(weatherImg);
+                dayWrap.appendChild(tempValue);
+                dayWrap.appendChild(windValue);
+                dayWrap.appendChild(humidValue);
+
+
+                document.getElementById("five-day-forecast").appendChild(dayWrap);
+            }
+
+        })
+}
+
+const displayRecentHistory = () => {
+    let recentHolactionsDiv = document.getElementById("recent-locations");
+    recentHolactionsDiv.innerHTML = "";
+
+    for (let i = 0; i < recentLocations.length; i++) {
+        let searchButton = document.createElement("button");
+        searchButton.classList.add("search-btn");
+        searchButton.classList.add("recent-history-button");
+        searchButton.classList.add("row");
+
+        searchButton.onclick = function () {
+            lookupLocation(searchButton.innerHTML)
+                .then(data => {
+                    cityData = data;
+                    cityName = searchButton.innerHTML;
+                    getWeatherData(cityData.lat, cityData.lon);
+                })
+        };
+
+        searchButton.innerHTML = recentLocations[i];
+        recentHolactionsDiv.appendChild(searchButton);
     }
-};
+
+    console.log(recentLocations);
+}
+
+const convertDate = (dateAsString) => {
+    const date = new Date(dateAsString);
+
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    const formattedResult = `${day}/${month}/${year}`;
+    return formattedResult;
+}
+
+displayRecentHistory()

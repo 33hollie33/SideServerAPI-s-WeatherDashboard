@@ -4,60 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link>
-          </head>
-        <body>
-            <header> Weather Dashboard </header>
-        </body>
-        <main>
-<!-- Search engine -->
-<aside>
-            <div class="row">
-            <div class="search wrap" class="colum row">
-            <div class="forecast-wrap">
-                </div>
-            
-                <label for="searchbar" class= "search-label"> Enter a location></label> 
-                <input type="text"> </div></input>
-                <button class ="search-btn" Search ></button>
-                <div id="error"> </div>
-                <div class="recent-section" id="recent-locations"> </div>
-              </aside>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="banner">Weather Dashboard</header>
 
-                <!-- Main dashboard -->
-                <div class= "forecast-wrap"> 
-                <div class="weather-information"> </div>
-                <div class="temperature"> </div>
-                <p> Temperature:</p>
-                <span id="temp_value"></span>
+    <main>
+      <div class="row">
+        <div class="left-section">
+          <div class="search-wrap column">
+            <label for="searchbar" class="search-label">
+              Search for a City:
+            </label>
+            <input type="text" id="searchbar" class="searchbar" />
+            <button class="search-btn" onclick="getCity();">Search</button>
+          </div>
+          <div id="error"></div>
+          <div class="recent-section" id="recent-locations"></div>
+        </div>
 
-                <div class="wind">
-                  <p>Wind:</p>
-                  <span id="wind_value"></span>
-                    </div>
-                
-                    <div class="humidity">
-                    <p>Humidity:</p>
-                    <span id="humid_value"></span>
-                    </div>
+        <!-- Main dashboard -->
+        <div class="forecast-wrap">
+          <div class="city-forecast hidden" id="city-forecast">
+            <div id="cityname-date"></div>
+            <div class="temperature row">
+              <div>Temperature:</div>
+              <div id="temp_value"></div>
+            </div>
 
-                    <div class="uv-index">
-                    <p>UV index:</p> 
-                    <span id="uvi_value"> </span>             
+            <div class="wind row">
+              <div>Wind:</div>
+              <div id="wind_value"></div>
+            </div>
 
-    <!-- weekly forecast -->
+            <div class="humidity row">
+              <div>Humidity:</div>
+              <div id="humid_value"></div>
+            </div>
+          </div>
 
-                <div class="weekly forcast">  <div class= "forecast-wrap"> <class= row weekly-forecast> </div>
-                <class= day one> 
-                <class= day two>
-                <class= day three>
-                <class= day four>
-                <class= day five>
-                </class>
-                  
-              </div>
-            
-                
-    
-              </main>
-      </html>
+          <!-- weekly forecast -->
+
+          <div class="weekly-forcast">
+
+            <div class="weekly-heading hidden" id="weekly-heading">5-Day Forecast: </div>
+
+            <div class="five-day-forecast row" id="five-day-forecast">
+           
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
