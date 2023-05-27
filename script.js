@@ -57,24 +57,20 @@ const clearError = () => {
     errorDisplay.textContent = '';
 }
 
-const lookupLocation = (cityName) => {
+const lookupLocation = async (cityName) => {
     const apiURL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${apiKey}`;
-    return fetch(apiURL)
-        .then(response => response.json())
-        .then(data => {
-
-            cityData = {
-                name: data[0].name,
-                country: data[0].country,
-                lat: data[0].lat,
-                lon: data[0].lon
-            }
-            recentLocations.unshift(cityData.name);
-            localStorage.setItem('CitySearch',JSON.stringify(recentLocations))
-            displayRecentHistory();
-            return cityData;
-
-        })
+        const response = await fetch(apiURL);
+    const data = await response.json();
+    cityData = {
+        name: data[0].name,
+        country: data[0].country,
+        lat: data[0].lat,
+        lon: data[0].lon
+    };
+    recentLocations.unshift(cityData.name);
+    localStorage.setItem('CitySearch', JSON.stringify(recentLocations));
+    displayRecentHistory();
+    return cityData;
 }
 
 const getWeatherData = (lat, lon) => {
