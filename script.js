@@ -1,4 +1,6 @@
+// Local storage
 const recentLocations = JSON.parse(localStorage.getItem('CitySearch')) ||[]
+// API key
 const apiKey = '517027e1c58e057de7aff58616a09fa9';
 let cityData = {};
 
@@ -89,7 +91,7 @@ const getWeatherData = (lat, lon) => {
                 cityForecast.classList.remove("hidden");
                 cityForecast.style.display = "block";
             }
-
+// For the icons to appear
             let iconCode = currentDayData.weather[0].icon;
             const iconURL = `https://openweathermap.org/img/w/${iconCode}.png`;
 
@@ -106,6 +108,7 @@ const getWeatherData = (lat, lon) => {
 
             let headingDiv = document.getElementById("weekly-heading");
             headingDiv.style.display = "block";
+            // for loop
 
             for (let i = 7; i < data.list.length; i+=8) {
                 let dayData = data.list[i];
@@ -147,6 +150,7 @@ const getWeatherData = (lat, lon) => {
 const displayRecentHistory = () => {
     let recentHolactionsDiv = document.getElementById("recent-locations");
     recentHolactionsDiv.innerHTML = "";
+    // for loop
 
     for (let i = 0; i < recentLocations.length; i++) {
         let searchButton = document.createElement("button");
